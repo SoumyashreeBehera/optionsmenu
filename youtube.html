@@ -1,0 +1,89 @@
+<head>
+  <link rel="stylesheet" href="css/ionicons.min.css" />
+  <style>
+    #navBar {
+      display: flex;
+      background-color: #202020;
+      color: white;
+      padding: 10px 30px;
+      align-items: center;
+    }
+    #navBar > i,
+    #navBar > div {
+      flex: 1.5;
+      font-size: 30px;
+    }
+    div > input {
+      height: 40px;
+      font-size: 25px;
+      padding: 0px 10px;
+      color: #6d6d6d;
+      background-color: black;
+      align-items: center;
+      width: 600px;
+    }
+    div > button {
+      height: 40px;
+      margin: 0px 0px;
+      color: #6d6d6d;
+      background-color: #313131;
+      font-size: 25px;
+      width: 70px;
+    }
+    .inputsFiled {
+      flex: 1;
+      font-size: 30px;
+    }
+    #videos {
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: repeat(4, 20%);
+      grid-gap: 5%;
+      justify-content: center;
+    }
+    #videos > div > iframe {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div id="navBar">
+    <i class="ion-navicon-round"></i>
+    <div style="display: flex">
+      <i class="ion-social-youtube" style="color: red"></i>
+      <div>YOUTUBE</div>
+    </div>
+    <div style="flex: 30; text-align: center" class="inputsFiled">
+      <input type="text" id="query" placeholder="Search" />
+      <button onclick="findVideos()"><i class="ion-ios7-search"></i></button>
+      <i class="ion-mic-a"></i>
+    </div>
+    <i class="ion-ios7-videocam"></i>
+    <i class="ion-ios7-keypad"></i>
+    <i class="ion-ios7-bell"></i>
+  </div>
+  <div id="videos"></div>
+</body>
+<script>
+  let videosDiv = document.getElementById("videos");
+  async function findVideos() {
+    videosDiv.innerHTML = null;
+    let q = document.getElementById("query").value;
+    let res = await fetch(
+      `https://youtube.googleapis.com/youtube/v3/search?q=${q}&key=AIzaSyCa6iny1ZnzYXoV0PBgZhc_ZJgBUq-u50E&maxResults=21`
+    );
+    let data = await res.json();
+    console.log(data);
+    let { items } = data;
+    items = items.filter((el) => {
+      return el.id.videoId != undefined;
+    });
+    items.forEach(({ id: { videoId } }) => {
+      let div = document.createElement("div");
+      div.style.marginTop = "20px";
+      div.innerHTML = `<iframe height="315" src="https://www.youtube.com/embed/${videoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+      videosDiv.appendChild(div);
+    });
+  }
+  // findVideos();
+</script>
