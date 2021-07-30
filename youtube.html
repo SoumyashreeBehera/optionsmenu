@@ -85,5 +85,21 @@
       videosDiv.appendChild(div);
     });
   }
-  // findVideos();
+
+  async function show() {
+    videosDiv.innerHTML = null;
+    let res = await fetch(
+      "https://youtube.googleapis.com/youtube/v3/videos?chart=mostPopular&locale=India&key=AIzaSyCa6iny1ZnzYXoV0PBgZhc_ZJgBUq-u50E&maxResults=21"
+    );
+    let data = await res.json();
+
+    let { items } = data;
+    items.forEach(({ id }) => {
+      let div = document.createElement("div");
+      div.style.marginTop = "20px";
+      div.innerHTML = `<iframe height="315" src="https://www.youtube.com/embed/${id}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+      videosDiv.appendChild(div);
+    });
+  }
+  show();
 </script>
